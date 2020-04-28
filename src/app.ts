@@ -9,7 +9,7 @@ import path from "path";
 import mongoose from "mongoose";
 import passport from "passport";
 import bluebird from "bluebird";
-import { MONGODB_URI, SESSION_SECRET } from "./util/secrets";
+import { SESSION_SECRET } from "./util/secrets";
 
 const MongoStore = mongo(session);
 
@@ -18,6 +18,7 @@ import * as homeController from "./controllers/home";
 import * as userController from "./controllers/user";
 import * as apiController from "./controllers/api";
 import * as contactController from "./controllers/contact";
+import * as timeReportController from "./controllers/timeReport";
 
 
 // API keys and Passport configuration
@@ -27,6 +28,7 @@ import * as passportConfig from "./config/passport";
 const app = express();
 
 // Connect to MongoDB
+const MONGODB_URI = "mongodb://siriusUser:password1@ds263640.mlab.com:63640/sirius";
 const mongoUrl = MONGODB_URI;
 mongoose.Promise = bluebird;
 
@@ -101,6 +103,10 @@ app.post("/account/profile", passportConfig.isAuthenticated, userController.post
 app.post("/account/password", passportConfig.isAuthenticated, userController.postUpdatePassword);
 app.post("/account/delete", passportConfig.isAuthenticated, userController.postDeleteAccount);
 app.get("/account/unlink/:provider", passportConfig.isAuthenticated, userController.getOauthUnlink);
+app.get("/new-truser", timeReportController.getCreateTRUer);
+app.post("/new-truser", timeReportController.createTRUer)
+app.get("/time-report", timeReportController.getTimeReport);
+app.post("/time-report", timeReportController.sendTimeReport);
 
 /**
  * API examples routes.

@@ -1,0 +1,24 @@
+extends layout
+
+block content
+  .page-header
+    h3 Create new Time Report User
+    hr
+
+  form.form-horizontal(method='POST')
+    table(style='width:100%', border='1')
+      tr
+        th Firstname
+        th Lastname
+        th Email
+      tr
+        td
+          input(type="text", name='firstname')
+        td
+          input(type="text", name="lastname")
+        td
+          input(type="text", name="email")
+    
+    button.btn.btn-primary(type='submit')
+      i.fa.fa-envelope
+      | Send

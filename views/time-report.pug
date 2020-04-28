@@ -1,0 +1,59 @@
+extends layout
+
+block content
+  .page-header
+    h3 Time Report
+    hr
+
+  form.form-horizontal(method='POST')
+    p week
+    input(type="text", name='week')
+    p email
+    input(type="text", name='email')
+    table(style='width:100%', border='1')
+      tr
+        th Activity
+        th Monday
+        th Thuesday
+        th Wednesday
+        th Thursday
+        th Friday
+        th Saturday
+        th Sunday
+      tr
+        td
+          input(type="text", name='activity')
+        td
+          input(type="text", name="monday")
+        td
+          input(type="text", name="thuesday")
+        td
+          input(type="text", name="wednesday")
+        td
+          input(type="text", name="thursday")
+        td
+          input(type="text", name="friday")
+        td
+          input(type="text", name="saturday")
+        td
+          input(type="text", name="sunday")
+      tr
+        td
+          input(type="text", name='activity')
+        td
+          input(type="text", name="monday")
+        td
+          input(type="text", name="thuesday")
+        td
+          input(type="text", name="wednesday")
+        td
+          input(type="text", name="thursday")
+        td
+          input(type="text", name="friday")
+        td
+          input(type="text", name="saturday")
+        td
+          input(type="text", name="sunday")
+    button.btn.btn-primary(type='submit')
+      i.fa.fa-envelope
+      | Send
