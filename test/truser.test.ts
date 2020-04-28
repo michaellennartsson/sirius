@@ -1,18 +1,23 @@
 import mongoose from 'mongoose';
 
-import { TRUser, TimeReport } from '../src/models/TRUser';
+import { TRUser } from '../src/models/TRUser';
+import { TimeReport } from '../src/models/TimeReport'
 import { invalidWeek, invalidHours } from '../src/controllers/timeReport'
 
 describe("Verifies time report user", () => {
-  // beforeAll(async () => {
-  //   await mongoose.connect('mongodb://siriusUser:password1@ds263640.mlab.com:63640/sirius', { useNewUrlParser: true, useCreateIndex: true }, (err: string) => {
-  //       if (err) {
-  //           console.error(err);
-  //           process.exit(1);
-  //       }
-  //   });
-  // });
+  beforeAll(async () => {
+    await mongoose.connect('mongodb://sirius_test:test123@ds159845.mlab.com:59845/sirius_test', { useNewUrlParser: true, useCreateIndex: true }, (err) => {
+        if (err) {
+            console.error(err);
+            process.exit(1);
+        }
+    });
+  });
 
+  beforeEach(async () => {
+    await TRUser.deleteMany({})
+  })
+  
   it("Firstname, lastname and email should be provided", () => {
     const new_user = new TRUser({
       firstname: undefined,
@@ -53,16 +58,6 @@ describe("Verifies time report user", () => {
     const error = new_user.validateSync();
     expect(error).toBe(undefined);
   })
-
-  // it('Creates and store a new user in database', () => {
-  //   const new_user = new TRUser({
-  //     firstname: 'Michael',
-  //     lastname: 'Lennartsson',
-  //     email: 'michael.lennartsson@gmail.com'
-  //   });
-
-  //   new_user.save()
-  // })
 
   it('Verifies invalidWeek function', () => {
     let new_user = new TRUser({
@@ -114,6 +109,67 @@ describe("Verifies time report user", () => {
 
     report.hours.monday = [-2, 10]
     expect(invalidHours(report)).toBe(true)
+  })
+
+  it('Creates and saves a new TRUser', async (done) => {
+    let new_user = new TRUser({
+      firstname: 'Michael',
+      lastname: 'Lennartsson',
+      email: 'michael.lennartsson@gmail.com',
+      timeReport: []
+    });
+
+    await new_user.save()
+    expect(new_user.isNew).toBe(false)
+    done()
+  })
+
+  it('Verifies that email is uniqe', async (done) => {
+    let new_user = new TRUser({
+      firstname: 'Michael',
+      lastname: 'Lennartsson',
+      email: 'michael.lennartsson@gmail.com',
+      timeReport: []
+    });
+
+    let new_user_duplicate = new TRUser({
+      firstname: 'Michael',
+      lastname: 'Lennartsson',
+      email: 'michael.lennartsson@gmail.com',
+      timeReport: []
+    });
+
+    try{
+      await new_user.save();
+      await new_user_duplicate.save();
+    } catch(err) {
+      expect(err.errmsg).toBe('E11000 duplicate key error index: sirius_test.trusers.$email_1 dup key: { : "michael.lennartsson@gmail.com" }');
+      done()
+    }
+  })
+
+  it('Verifies that week is uniqe', async (done) => {
+    let new_user = new TRUser({
+      firstname: 'Michael',
+      lastname: 'Lennartsson',
+      email: 'michael.lennartsson@gmail.com',
+      timeReport: [{week: 1}]
+    });
+
+    let new_user_duplicate = new TRUser({
+      firstname: 'Michael',
+      lastname: 'Lennartsson',
+      email: 'michael.lennartsson@hotmail.com',
+      timeReport: [{week: 1}]
+    });
+
+    try{
+      await new_user.save();
+      await new_user_duplicate.save();
+    } catch(err) {
+      expect(err.errmsg).toBe('E11000 duplicate key error index: sirius_test.trusers.$timeReport.week_1 dup key: { : 1 }');
+      done()
+    }
   })
 
 });

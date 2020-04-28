@@ -1,29 +1,13 @@
-import mongoose from 'mongoose';
+import mongoose, { Document, Schema } from 'mongoose';
 
-export type TRUserDocument = mongoose.Document & {
+import { TimeReportSchema, TimeReport } from './TimeReport'
+
+export type TRUserDocument = Document & {
   firstname: string;
   lastname: string;
   email: string;
   timeReport: TimeReport[];
 }
-
-export interface TimeReport {
-  week: number;
-  activity: string[];
-  hours: Days
-}
-
-export interface Days {
-  monday: number[];
-  thuesday: number[];
-  wednesday: number[];
-  thursday: number[];
-  friday: number[];
-  saturday: number[];
-  sunday: number[];
-}
-
-const Schema = mongoose.Schema;
 
 const UserScheam = new Schema({
   firstname: {
@@ -48,7 +32,7 @@ const UserScheam = new Schema({
     required: [true, 'Email is required'],
     unique : true
   },
-  timeReport: Array
+  timeReport: [TimeReportSchema]
 });
 
 /**

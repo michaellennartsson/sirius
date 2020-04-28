@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 
-import { TRUser, TimeReport, Days } from '../models/TRUser';
+import { TRUser } from '../models/TRUser';
+import { TimeReport } from '../models/TimeReport'
 
 /**
  * GET /new-truser
